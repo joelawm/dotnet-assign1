@@ -1,0 +1,5 @@
+/Users/asl614/Desktop/dotnet/Assign_1/Assign_1/obj/Debug/Assign_1.csprojAssemblyReference.cache
+/Users/asl614/Desktop/dotnet/Assign_1/Assign_1/bin/Debug/Assign_1.exe
+/Users/asl614/Desktop/dotnet/Assign_1/Assign_1/bin/Debug/Assign_1.pdb
+/Users/asl614/Desktop/dotnet/Assign_1/Assign_1/obj/Debug/Assign_1.exe
+/Users/asl614/Desktop/dotnet/Assign_1/Assign_1/obj/Debug/Assign_1.pdb
