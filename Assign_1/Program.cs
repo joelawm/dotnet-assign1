@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Assign_1
 {
@@ -34,15 +35,16 @@ namespace Assign_1
                         var month = Int32.Parse(iInput[5]);
                         var day = Int32.Parse(iInput[6]);
                         var dt = new DateTime(year, month, day);
+                        var resId = iInput[7];
 
-                        community.Residents.Add(new Person(id, dt, lName, fName, occ));
+                        community.Residents.Add(new Person(id, dt, lName, fName, occ, resId));
                         i++;
                     } while (i < input.Length);
 
                     sr.Close();
                 }
             }
-
+             
             if (File.Exists(HouseFile))
             {
                 using (StreamReader sr = File.OpenText(HouseFile))
@@ -66,9 +68,7 @@ namespace Assign_1
                         var bath = UInt32.Parse(iInput[10]);
                         var sqft = UInt32.Parse(iInput[11]);
                         var garage = iInput[12].Equals("T");
-                        ;
                         var aGarage = iInput[13].Equals("T");
-                        ;
                         var floor = UInt32.Parse(iInput[14]);
 
                         House house = new House(id, x, y, oId, stAddr, city, state,
@@ -114,10 +114,9 @@ namespace Assign_1
                     sr.Close();
                 }
             }
-            
+           
            int option = 0;
-           bool op = true;
-           while (op == true)
+           while (option != 10)
            {
                Console.WriteLine("1. Full property list.");
                Console.WriteLine("2. List addresses of either House or Apartment-type properties.");
@@ -138,7 +137,7 @@ namespace Assign_1
                switch (option)
                {
                    case 1:
-                       Console.WriteLine($"<{community.Id}> {community.Name}. Population ({community.Population}). Mayor: {community.MayorId}");
+                       Console.WriteLine($"<{community.Id}> {community.Name}. Population ({community.Population}). Mayor: {community.MayorID}");
                        
                        foreach (var p in community.Props)
                        {
@@ -260,13 +259,13 @@ namespace Assign_1
                        break;
                    case 6:
                        Console.WriteLine("Enter the street address: ");
-                       string NotForSale = Console.ReadLine();
+                       string notForSale = Console.ReadLine();
                        
                        foreach (var property in community.Props)
                        {
-                           if (property.StreetAddr != NotForSale) continue;
+                           if (property.StreetAddr != notForSale) continue;
                            property.ForSale = false;
-                           Console.WriteLine($"Now {NotForSale} is NOT for sale.");
+                           Console.WriteLine($"Now {notForSale} is NOT for sale.");
                        }
                        
                        Console.WriteLine("Press any key to continues.");
@@ -307,26 +306,8 @@ namespace Assign_1
                        Console.ReadKey();
                        break;
                    case 8:
-                       Console.WriteLine("Enter the street address to lookup:");
-                        string lookup = Console.ReadLine();
-                        foreach (var property in community.Props)
-                        {
-                            //start going through each property listed
-                            if (property.StreetAddr == lookup)
-                            {
-                                if (property.OwnerId != null) //if owner exists
-                                {
-                                    Console.WriteLine("You are already a resident at this property.");
-                                }
-                                else
-                                {
-                                    //debugging
-                                    //Console.WriteLine(property.StreetAddr.ToString());
-                                    Console.WriteLine("Success! You have been added as a resident at this property.");
-                                }
-                            }
-                        }
-                        Console.WriteLine("Press any key to continues.");
+                       Console.WriteLine("in case 8");
+                       Console.WriteLine("Press any key to continues.");
                        Console.ReadKey();
                        break;
                    case 9:
@@ -335,15 +316,8 @@ namespace Assign_1
                        Console.ReadKey();
                        break;
                    case 10:
-                        //rewrite to use q, e, quit and or exit.
-                        Console.WriteLine("Enter q, e, quit or exit to leave the program.");
-                        string exitP = Console.ReadLine();
-                        if (exitP == "q" | exitP == "e" | exitP == "exit" | exitP == "quit")
-                        {
-                            Console.WriteLine("Quitting program...");
-                            System.Environment.Exit(1);
-                        }
-                        break;
+                       Console.WriteLine("Quitting program...");
+                       break;
                    default:
                        Console.WriteLine("Please select available option!");
                        Console.WriteLine("Press any key to continues.");
@@ -362,31 +336,33 @@ namespace Assign_1
         private string lastName;
         private string firstName;
         private string occupation;
-        private List<uint> residencelds;
+        private List<uint> residencelds = new List<uint>();
         private string fullName;
 
         public Person()
         {
             _id = 0;
-            lastName = "";
-            firstName = "";
+            LastName = "";
+            FirstName = "";
             fullName = "";
-            occupation = "";
+            Occupation = "";
             _birthday = DateTime.Now;
-            residencelds = null;
+            residencelds.Add(0);
         }
 
-        public Person(uint id, DateTime bd, string l, string f, string o)
+        public Person(uint id, DateTime bd, string l, string f, string o, string resId)
         {
             _id = id;
             _birthday = bd;
-            lastName = l;
-            firstName = f;
-            occupation = o;
-            fullName = firstName + ", " + lastName;
-            residencelds = new List<uint>();
-            residencelds.Add(_id);
-
+            LastName = l;
+            FirstName = f;
+            Occupation = o;
+            fullName = FirstName + ", " + LastName;
+            
+            foreach (var rid in resId.ToArray())
+            {
+                residencelds.Add(Convert.ToUInt32(rid) - 48);
+            }
         }
 
         public string LastName
@@ -407,14 +383,7 @@ namespace Assign_1
             set => occupation = value;
         }
 
-        public uint[] Residencelds
-        {
-            get
-            {
-                uint[] array = residencelds.ToArray();
-                return array;
-            }
-        }
+        public uint[] Residencelds => residencelds.ToArray();
 
         public uint Id => _id;
 
@@ -430,13 +399,15 @@ namespace Assign_1
             }
 
             Person otherO = alpha as Person;
+            if (this.Id == otherO.Id)
+                return 0;
 
             return this.fullName.CompareTo(otherO.fullName);
         }
 
         public override string ToString()
         {
-            return base.ToString();
+            return $"ID: {_id} Name: {FullName} Date of birth: {_birthday} Occupation: {Occupation}";
         }
     }
 
@@ -530,6 +501,12 @@ namespace Assign_1
             }
 
             Property otherP = alpha as Property;
+
+            if (this.OwnerId == otherP.Id)
+            {
+                return 0;
+            }
+            
             var stateResult = this.state.CompareTo(otherP.State);
             if (stateResult != 0)
             {
@@ -562,9 +539,9 @@ namespace Assign_1
             string sa, string c, string st, string z, bool fs, uint bedroom, uint bath, uint sq)
             : base(id, x, y, o, sa, c, st, z, fs)
         {
-            bedrooms = bedroom;
-            baths = bath;
-            sqft = sq;
+            Bedrooms = bedroom;
+            Baths = bath;
+            Sqft = sq;
         }
 
         public uint Bedrooms
@@ -598,10 +575,10 @@ namespace Assign_1
             bool gar, bool aGar, uint fl)
             : base(id, x, y, o, sa, c, st, z, fs, bedroom, bath, sq)
         {
-            attatchedGarage = null;
-            garage = gar;
-            attatchedGarage = aGar;
-            flood = fl;
+            AttatchedGarage = null;
+            Garage = gar;
+            AttatchedGarage = aGar;
+            Flood = fl;
         }
 
         public bool Garage
@@ -631,7 +608,7 @@ namespace Assign_1
             string st, string z, bool fs, uint bedroom, uint bath, uint sq, string u)
             : base(id, x, y, o, sa, c, st, z, fs, bedroom, bath, sq)
         {
-            unit = u;
+            Unit = u;
         }
 
         public string Unit
@@ -655,9 +632,9 @@ namespace Assign_1
         {
             _id = 0;
             _name = "";
-            props = null;
-            residents = null;
-            mayorID = 0;
+            Props = null;
+            Residents = null;
+            MayorID = 0;
         }
 
         public Community(uint id, string name, uint mId)
@@ -666,8 +643,7 @@ namespace Assign_1
             _name = name;
             props = new SortedSet<Property>();
             residents = new SortedSet<Person>();
-            mayorID = mId;
-            Console.WriteLine(props.Count);
+            MayorID = mId;
         }
         
         public SortedSet<Property> Props
@@ -697,7 +673,7 @@ namespace Assign_1
 
         public string Name => _name;
 
-        public uint MayorId
+        public uint MayorID
         {
             get => mayorID;
             set => mayorID = value;
