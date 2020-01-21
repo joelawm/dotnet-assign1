@@ -116,7 +116,8 @@ namespace Assign_1
             }
             
            int option = 0;
-           while (option != 10)
+           bool op = true;
+           while (op == true)
            {
                Console.WriteLine("1. Full property list.");
                Console.WriteLine("2. List addresses of either House or Apartment-type properties.");
@@ -306,8 +307,26 @@ namespace Assign_1
                        Console.ReadKey();
                        break;
                    case 8:
-                       Console.WriteLine("in case 8");
-                       Console.WriteLine("Press any key to continues.");
+                       Console.WriteLine("Enter the street address to lookup:");
+                        string lookup = Console.ReadLine();
+                        foreach (var property in community.Props)
+                        {
+                            //start going through each property listed
+                            if (property.StreetAddr == lookup)
+                            {
+                                if (property.OwnerId != null) //if owner exists
+                                {
+                                    Console.WriteLine("You are already a resident at this property.");
+                                }
+                                else
+                                {
+                                    //debugging
+                                    //Console.WriteLine(property.StreetAddr.ToString());
+                                    Console.WriteLine("Success! You have been added as a resident at this property.");
+                                }
+                            }
+                        }
+                        Console.WriteLine("Press any key to continues.");
                        Console.ReadKey();
                        break;
                    case 9:
@@ -316,8 +335,15 @@ namespace Assign_1
                        Console.ReadKey();
                        break;
                    case 10:
-                       Console.WriteLine("Quitting program...");
-                       break;
+                        //rewrite to use q, e, quit and or exit.
+                        Console.WriteLine("Enter q, e, quit or exit to leave the program.");
+                        string exitP = Console.ReadLine();
+                        if (exitP == "q" | exitP == "e" | exitP == "exit" | exitP == "quit")
+                        {
+                            Console.WriteLine("Quitting program...");
+                            System.Environment.Exit(1);
+                        }
+                        break;
                    default:
                        Console.WriteLine("Please select available option!");
                        Console.WriteLine("Press any key to continues.");

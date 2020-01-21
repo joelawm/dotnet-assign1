@@ -3,3 +3,9 @@
 /Users/asl614/Desktop/dotnet/Assign_1/Assign_1/bin/Debug/Assign_1.pdb
 /Users/asl614/Desktop/dotnet/Assign_1/Assign_1/obj/Debug/Assign_1.exe
 /Users/asl614/Desktop/dotnet/Assign_1/Assign_1/obj/Debug/Assign_1.pdb
+C:\Github\dotnet-assign1\Assign_1\bin\Debug\Assign_1.exe.config
+C:\Github\dotnet-assign1\Assign_1\bin\Debug\Assign_1.exe
+C:\Github\dotnet-assign1\Assign_1\bin\Debug\Assign_1.pdb
+C:\Github\dotnet-assign1\Assign_1\obj\Debug\Assign_1.csprojAssemblyReference.cache
+C:\Github\dotnet-assign1\Assign_1\obj\Debug\Assign_1.exe
+C:\Github\dotnet-assign1\Assign_1\obj\Debug\Assign_1.pdb
