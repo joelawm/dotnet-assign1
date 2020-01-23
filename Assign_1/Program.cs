@@ -305,35 +305,89 @@ namespace Assign_1
                        Console.WriteLine("Press any key to continues.");
                        Console.ReadKey();
                        break;
-                   case 8:
-                       Console.WriteLine("Enter the street address to lookup:");
+                    case 8:
+                        Console.WriteLine("Enter the street address to lookup:");
                         string lookup = Console.ReadLine();
                         foreach (var property in community.Props)
                         {
                             //start going through each property listed
                             if (property.StreetAddr == lookup)
                             {
-                                if (property.OwnerId != null) //if owner exists
+
+                                bool isFound = false;
+                                foreach (var r in community.Residents)
                                 {
-                                    Console.WriteLine("You are already a resident at this property.");
-                                }
-                                else
-                                {
-                                    //debugging
-                                    //Console.WriteLine(property.StreetAddr.ToString());
-                                    Console.WriteLine("Success! You have been added as a resident at this property.");
+                                    if (r.Id == 0) //if the resident is the mayor id 0
+                                    {
+                                        foreach (var e in r.Residencelds)
+                                        {
+                                            if (e == property.Id)
+                                            {
+                                                Console.WriteLine("You are already a resident at this property.");
+                                                isFound = true;
+                                                break;
+                                            }
+                                        }
+
+                                        if (!isFound)
+                                        {
+                                            r.Add(property.Id);
+                                            Console.WriteLine("Success! You have been added as a resident at this property.");
+                                            break;
+                                        }
+                                    }
                                 }
                             }
                         }
                         Console.WriteLine("Press any key to continues.");
-                       Console.ReadKey();
-                       break;
-                   case 9:
-                       Console.WriteLine("in case 9");
-                       Console.WriteLine("Press any key to continues.");
-                       Console.ReadKey();
-                       break;
-                   case 10:
+                        Console.ReadKey();
+                        break;
+                    case 9:
+                        Console.WriteLine("Enter the street address to lookup:");
+                        string lookup2 = Console.ReadLine();
+                        bool notAddress = true;
+                        foreach (var property in community.Props)
+                        {
+                            //start going through each property listed
+                            if (property.StreetAddr == lookup2)
+                            {
+
+                                bool isFound = false;
+                                foreach (var r in community.Residents)
+                                {
+                                    if (r.Id == 0) //if the resident is the mayor id 0
+                                    {
+                                        foreach (var e in r.Residencelds)
+                                        {
+                                            if (e == property.Id)
+                                            {
+                                                Console.WriteLine("Success! You have been removed as a resident from this property.");
+                                                r.Remove(property.Id);
+                                                isFound = true;
+                                                notAddress = false;
+                                                break;
+                                            }
+                                        }
+
+                                        if (!isFound)
+                                        {
+                                            Console.WriteLine("You do not currentely reside at this property.");
+                                            notAddress = false;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        if (notAddress == true)
+                        {
+                            Console.WriteLine("I'm sorry, I don't recognize this address: " + lookup2);
+                        }
+                        Console.WriteLine("Press any key to continues.");
+                        Console.ReadKey();
+                        break;
+                    case 10:
                         //rewrite to use q, e, quit and or exit.
                         Console.WriteLine("Enter q, e, quit or exit to leave the program.");
                         string exitP = Console.ReadLine();
@@ -342,6 +396,7 @@ namespace Assign_1
                             Console.WriteLine("Quitting program...");
                             System.Environment.Exit(1);
                         }
+                        break;
                    default:
                        Console.WriteLine("Please select available option!");
                        Console.WriteLine("Press any key to continues.");
@@ -408,6 +463,16 @@ namespace Assign_1
         }
 
         public uint[] Residencelds => residencelds.ToArray();
+
+        public void Add(uint id)
+        {
+            residencelds.Add(id);
+        }
+
+        public void Remove(uint id)
+        {
+            residencelds.Remove(id);
+        }
 
         public uint Id => _id;
 
