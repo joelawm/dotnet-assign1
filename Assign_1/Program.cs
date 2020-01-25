@@ -337,7 +337,7 @@ namespace Assign_1
                        Console.WriteLine("Press any key to continues.");
                        Console.ReadKey();
                        break;
-                   case 8:
+                     case 8:
                         Console.WriteLine("Enter the street address to lookup:");
                         string lookup = Console.ReadLine();
                         foreach (var property in community.Props)
@@ -494,6 +494,16 @@ namespace Assign_1
 
         public uint[] Residencelds => residencelds.ToArray();
         
+        public void Add(uint id)
+        {
+            residencelds.Add(id);
+        }
+
+        public void Remove(uint id)
+        {
+            residencelds.Remove(id);
+        }
+
         public void Add(uint id)
         {
             residencelds.Add(id);
