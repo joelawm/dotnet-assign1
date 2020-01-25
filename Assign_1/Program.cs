@@ -2,12 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace Assign_1
 {
     internal class Program
     {
+        // the input data declares here
         private const string PersonFile = "../../p.txt";
         private const string HouseFile = "../../h.txt";
         private const string ApartmentFile = "../../a.txt";
@@ -16,15 +16,19 @@ namespace Assign_1
         {
             Community community = new Community(99999, "DeKalb", 0);
 
+            // if PersonFile exists
             if (File.Exists(PersonFile))
             {
+                // PersonFile declares here
                 using (StreamReader sr = File.OpenText(PersonFile))
                 {
+                    // Split the data by '\n' and save them as 1d array
                     string[] input = sr.ReadToEnd().Split('\n');
                     int i = 0;
-
+                    
                     do
                     {
+                        // Split the data from input[] and save them in iInput[]
                         string[] iInput = input[i].Split('\t');
 
                         var id = UInt32.Parse(iInput[0]);
@@ -39,21 +43,24 @@ namespace Assign_1
 
                         community.Residents.Add(new Person(id, dt, lName, fName, occ, resId));
                         i++;
-                    } while (i < input.Length);
+                    } while (i < input.Length); // if i less than input[]'s length
 
                     sr.Close();
                 }
             }
              
+            // if HouseFile exists
             if (File.Exists(HouseFile))
             {
                 using (StreamReader sr = File.OpenText(HouseFile))
                 {
+                    // split data by '\n' and save them in input array
                     string[] input = sr.ReadToEnd().Split('\n');
                     int i = 0;
 
                     do
                     {
+                        // split data by '\t' and save them in iInput array
                         string[] iInput = input[i].Split('\t');
                         var id = UInt32.Parse(iInput[0]);
                         var oId = UInt32.Parse(iInput[1]);
@@ -75,21 +82,24 @@ namespace Assign_1
                             zip, forSale, bedRoom, bath, sqft, garage, aGarage, floor);
                         community.Props.Add(house);
                         i++;
-                    } while (i < input.Length);
+                    } while (i < input.Length); // if i less than input array's length
 
                     sr.Close();
                 }
             }
 
+            // if ApartmentFile exists
             if (File.Exists(ApartmentFile))
             {
                 using (StreamReader sr = File.OpenText(ApartmentFile))
-                {
+                {                    
+                    // split data by '\n' and save them in input array
                     string[] input = sr.ReadToEnd().Split('\n');
                     int i = 0;
 
                     do
                     {
+                        // split data by '\t' and save them in input array
                         string[] iInput = input[i].Split('\t');
                         var id = UInt32.Parse(iInput[0]);
                         var oId = UInt32.Parse(iInput[1]);
@@ -109,15 +119,15 @@ namespace Assign_1
                             bath, sqft, unit);
                         community.Props.Add(apartment);
                         i++;
-                    } while (i < input.Length);
+                    } while (i < input.Length); // do if i less than input array's length
 
                     sr.Close();
                 }
             }
-           
-           int option = 0;
-           while (option != 10)
-           {
+
+            int option = 0;
+            while (option != 10)
+            {
                Console.WriteLine("1. Full property list.");
                Console.WriteLine("2. List addresses of either House or Apartment-type properties.");
                Console.WriteLine("3. List addresses of all for-sale properties");
@@ -128,12 +138,21 @@ namespace Assign_1
                Console.WriteLine("8. Add yourself as ana occupant to property.");
                Console.WriteLine("9. Remove yourself as ans occupant to a property.");
                Console.WriteLine("10. Quit.\n");
-               
-               if (!Int32.TryParse(Console.ReadLine(), out option))
+
+               string inputOption = Console.ReadLine();
+
+               // more option for the user to quit the program
+               if (inputOption == "q" || inputOption == "Q" || inputOption == "e" || inputOption == "E"
+                   || inputOption == "quit" || inputOption == "QUIT" || inputOption == "exit" || inputOption == "EXIT")
+               {
+                   option = 10;
+               }
+               // if the user type something other than option given
+               else if (!Int32.TryParse(inputOption, out option))
                {
                    option = 0;
                }
-             
+               
                switch (option)
                {
                    case 1:
@@ -145,6 +164,7 @@ namespace Assign_1
                            
                            foreach (var r in community.Residents)
                            {
+                               // if property matches that person
                                if (r.Id == p.OwnerId)
                                {
                                    Console.WriteLine($"\tOwned By {r.FullName} Age ({DateTime.Now.Year - r.Birthday.Year}) Occupation {r.Occupation}");
@@ -152,10 +172,12 @@ namespace Assign_1
                                }
                            }
 
+                           // if true return "for sale", else return "Not for sale"
                            string sale = p.ForSale ? "For sale" : "Not for sale";
                            Console.Write($"\t({sale}) {((Residential) p).Bedrooms} \\ {((Residential) p).Baths} \\ " +
                                              $"{((Residential) p).Sqft} sq.ft.");
                            
+                           // if the property is not a house
                            if((p as House) != null)
                            {
                                string garage = ((House) p).Garage ? "With Garage" 
@@ -182,6 +204,7 @@ namespace Assign_1
                            case "House":
                                foreach (var property in community.Props)
                                {
+                                   // if the property is not a house
                                    if ((property as House) != null)
                                    {
                                        Console.WriteLine($"{property.StreetAddr} {property.City} {property.State}");
@@ -192,6 +215,7 @@ namespace Assign_1
                            case "Apartment":
                                foreach (var property in community.Props)
                                {
+                                   // if the property is not a apartment
                                    if ((property as Apartment) != null)
                                    {
                                        Console.WriteLine($"{property.StreetAddr} Apt.# {((Apartment)property).Unit} {property.City} {property.State}");
@@ -213,6 +237,7 @@ namespace Assign_1
                        
                        foreach (var property in community.Props)
                        {
+                           // if the property is for sale
                            if (property.ForSale)
                            {
                                Console.WriteLine((property as Apartment) != null
@@ -244,9 +269,11 @@ namespace Assign_1
 
                        foreach (var property in community.Props)
                        {
+                           // if the street name exists;
                            if (property.StreetAddr != streetAddr) continue;
                            foreach (var resident in community.Residents)
                            {
+                               // if the person id matches the peoperty id
                                if (resident.Id == property.OwnerId)
                                {
                                    Console.WriteLine($"{resident.FullName} Age({DateTime.Now.Year - resident.Birthday.Year}) Occupation: {resident.Occupation}");
@@ -263,6 +290,7 @@ namespace Assign_1
                        
                        foreach (var property in community.Props)
                        {
+                           // if the property is for sale, then skip
                            if (property.StreetAddr != notForSale) continue;
                            property.ForSale = false;
                            Console.WriteLine($"Now {notForSale} is NOT for sale.");
@@ -277,6 +305,7 @@ namespace Assign_1
                        
                        foreach (var property in community.Props)
                        {
+                           // if the street address not exist, skip
                            if (property.StreetAddr != purchase) continue;
                            if (property.ForSale != true)
                            {
@@ -290,8 +319,11 @@ namespace Assign_1
                            string sale = property.ForSale ? "ForSale" : "Not for sale";
                            Console.Write($"\t({sale}) {((Residential) property).Bedrooms} \\ {((Residential) property).Baths} \\ " +
                                          $"{((Residential) property).Sqft} sq.ft.");
+                           
+                           // if the property is not a House
                            if((property as House) != null)
                            {
+                               // return whether the house has a garage or not
                                string garage = ((House) property).Garage ? "With Garage" 
                                    : ((bool) ((House) property).AttatchedGarage ? "With attach garage" : "With no garage");
                                Console.WriteLine($"\n\t...{garage} : {((House) property).Flood} floor\n");
@@ -306,52 +338,100 @@ namespace Assign_1
                        Console.ReadKey();
                        break;
                    case 8:
-                       Console.WriteLine("Enter the street address to lookup:");
+                        Console.WriteLine("Enter the street address to lookup:");
                         string lookup = Console.ReadLine();
                         foreach (var property in community.Props)
                         {
                             //start going through each property listed
                             if (property.StreetAddr == lookup)
                             {
-                                if (property.OwnerId != null) //if owner exists
+
+                                bool isFound = false;
+                                foreach (var r in community.Residents)
                                 {
-                                    Console.WriteLine("You are already a resident at this property.");
-                                }
-                                else
-                                {
-                                    //debugging
-                                    //Console.WriteLine(property.StreetAddr.ToString());
-                                    Console.WriteLine("Success! You have been added as a resident at this property.");
+                                    if (r.Id == 0) //if the resident is the mayor id 0
+                                    {
+                                        foreach (var e in r.Residencelds)
+                                        {
+                                            if (e == property.Id)
+                                            {
+                                                Console.WriteLine("You are already a resident at this property.");
+                                                isFound = true;
+                                                break;
+                                            }
+                                        }
+
+                                        if (!isFound)
+                                        {
+                                            r.Add(property.Id);
+                                            Console.WriteLine("Success! You have been added as a resident at this property.");
+                                            break;
+                                        }
+                                    }
                                 }
                             }
                         }
                         Console.WriteLine("Press any key to continues.");
-                       Console.ReadKey();
-                       break;
-                   case 9:
-                       Console.WriteLine("in case 9");
-                       Console.WriteLine("Press any key to continues.");
-                       Console.ReadKey();
-                       break;
-                   case 10:
-                        //rewrite to use q, e, quit and or exit.
-                        Console.WriteLine("Enter q, e, quit or exit to leave the program.");
-                        string exitP = Console.ReadLine();
-                        if (exitP == "q" | exitP == "e" | exitP == "exit" | exitP == "quit")
+                        Console.ReadKey();
+                        break;
+                    case 9:
+                        Console.WriteLine("Enter the street address to lookup:");
+                        string lookup2 = Console.ReadLine();
+                        bool notAddress = true;
+                        foreach (var property in community.Props)
                         {
-                            Console.WriteLine("Quitting program...");
-                            System.Environment.Exit(1);
+                            //start going through each property listed
+                            if (property.StreetAddr == lookup2)
+                            {
+
+                                bool isFound = false;
+                                foreach (var r in community.Residents)
+                                {
+                                    if (r.Id == 0) //if the resident is the mayor id 0
+                                    {
+                                        foreach (var e in r.Residencelds)
+                                        {
+                                            if (e == property.Id)
+                                            {
+                                                Console.WriteLine("Success! You have been removed as a resident from this property.");
+                                                r.Remove(property.Id);
+                                                isFound = true;
+                                                notAddress = false;
+                                                break;
+                                            }
+                                        }
+
+                                        if (!isFound)
+                                        {
+                                            Console.WriteLine("You do not currently reside at this property.");
+                                            notAddress = false;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
                         }
+
+                        if (notAddress == true)
+                        {
+                            Console.WriteLine("I'm sorry, I don't recognize this address: " + lookup2);
+                        }
+                        Console.WriteLine("Press any key to continues.");
+                        Console.ReadKey();
+                        break;
+                    case 10:
+                        Console.WriteLine("Quitting program...");
+                        break;
                    default:
                        Console.WriteLine("Please select available option!");
                        Console.WriteLine("Press any key to continues.");
                        Console.ReadKey();
                        break;
                }
-           }
+            }
         }
     }
-
+    
     public class Person : IComparable
     {
         private readonly uint _id;
@@ -383,9 +463,14 @@ namespace Assign_1
             Occupation = o;
             fullName = FirstName + ", " + LastName;
             
-            foreach (var rid in resId.ToArray())
+            // if fail to convert the residence id
+            if (Int32.TryParse(resId, out var result))
             {
-                residencelds.Add(Convert.ToUInt32(rid) - 48);
+                residencelds.Add((uint)result);
+            }
+            else
+            {
+                throw new ArgumentException("error: fail to convert residence id, please check again!");
             }
         }
 
@@ -408,6 +493,16 @@ namespace Assign_1
         }
 
         public uint[] Residencelds => residencelds.ToArray();
+        
+        public void Add(uint id)
+        {
+            residencelds.Add(id);
+        }
+
+        public void Remove(uint id)
+        {
+            residencelds.Remove(id);
+        }
 
         public uint Id => _id;
 
