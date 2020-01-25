@@ -14,6 +14,7 @@ namespace Assign_1
 
         public static void Main(string[] args)
         {
+            //start a new community for dekalb
             Community community = new Community(99999, "DeKalb", 0);
 
             // if PersonFile exists
@@ -125,9 +126,11 @@ namespace Assign_1
                 }
             }
 
+            //if option does not equal 10 countinue the program
             int option = 0;
             while (option != 10)
             {
+               //Options menu giving you access to the programs UI
                Console.WriteLine("1. Full property list.");
                Console.WriteLine("2. List addresses of either House or Apartment-type properties.");
                Console.WriteLine("3. List addresses of all for-sale properties");
@@ -155,9 +158,12 @@ namespace Assign_1
                
                switch (option)
                {
+                    //case one handles the Full property List
                    case 1:
                        Console.WriteLine($"<{community.Id}> {community.Name}. Population ({community.Population}). Mayor: {community.MayorID}");
                        
+
+                        //itterate through all the propeties
                        foreach (var p in community.Props)
                        {
                            Console.WriteLine($"Property Address: {p.StreetAddr} / {p.City} / {p.State} / {p.Zip}");
@@ -193,14 +199,19 @@ namespace Assign_1
                        Console.WriteLine("Press any key to continues.");
                        Console.ReadKey();
                        break;
+                   // This case 2 list addresses of either house or apartment-type propeties
                    case 2:
+                        //output for the UI
                        Console.WriteLine("Enter property type (House/Apartment):");
+                        //take in input
                        string houseOrApart = Console.ReadLine();
                        Console.WriteLine($"List addresses of {houseOrApart} property in {community.Name} community.");
                        Console.WriteLine("---------------------------------------------------------------------------\n");
 
+                        //check wether its a house or a apartmnet
                        switch (houseOrApart)
                        {
+                            //house case
                            case "House":
                                foreach (var property in community.Props)
                                {
@@ -212,6 +223,7 @@ namespace Assign_1
                                }
 
                                break;
+                            //apoatment case
                            case "Apartment":
                                foreach (var property in community.Props)
                                {
@@ -224,6 +236,7 @@ namespace Assign_1
 
                                break;
                            default:
+                                //error out if no option
                                Console.WriteLine($"Error: \"{houseOrApart}\" is not in option...");
                                break;
                        }   
@@ -231,15 +244,20 @@ namespace Assign_1
                        Console.WriteLine("Press any key to continues.");
                        Console.ReadKey();
                        break;
+                    //List addressesof all for-sale properties
                    case 3:
+                       //output
                        Console.WriteLine($"List addresses all FOR SALE property in {community.Name} community.");
                        Console.WriteLine("---------------------------------------------------------------------------\n");
                        
+
+                        //iterate throught eh community properites
                        foreach (var property in community.Props)
                        {
                            // if the property is for sale
                            if (property.ForSale)
                            {
+                               //main output
                                Console.WriteLine((property as Apartment) != null
                                    ? $"{property.StreetAddr} Apt.# {((Apartment) property).Unit} {property.City} {property.State}"
                                    : $"{property.StreetAddr} {property.City} {property.State}");
@@ -249,10 +267,13 @@ namespace Assign_1
                        Console.WriteLine("Press any key to continues.");
                        Console.ReadKey();
                        break;
+                   //List all residents of a community
                    case 4:
+                       //output for UI
                        Console.WriteLine($"List of all RESIDENTS in {community.Name} community.");
                        Console.WriteLine("---------------------------------------------------------------------------\n");
-
+                       
+                        //iterate throught each item and display the information
                        foreach (var resident in community.Residents)
                        {
                            Console.WriteLine($"{resident.FullName} Age({DateTime.Now.Year - resident.Birthday.Year}) Occupation: {resident.Occupation}\n");
@@ -261,12 +282,15 @@ namespace Assign_1
                        Console.WriteLine("Press any key to continues.");
                        Console.ReadKey();
                        break;
+                   //List all residents of a property, by street address
                    case 5:
+                        //output for UI
                        Console.WriteLine("Enter the street address: ");
                        string streetAddr = Console.ReadLine();
                        Console.WriteLine($"List of all residents live in {streetAddr}");
                        Console.WriteLine("---------------------------------------------------------------------------\n");
 
+                        //iterate through each community properties
                        foreach (var property in community.Props)
                        {
                            // if the street name exists;
@@ -284,14 +308,18 @@ namespace Assign_1
                        Console.WriteLine("Press any key to continues.");
                        Console.ReadKey();
                        break;
+                   //Toggle a property, by street address, as being for-sale or not
                    case 6:
+                        //output for UI
                        Console.WriteLine("Enter the street address: ");
                        string notForSale = Console.ReadLine();
                        
+                       //iterate throught the comunity properties
                        foreach (var property in community.Props)
                        {
                            // if the property is for sale, then skip
                            if (property.StreetAddr != notForSale) continue;
+                           //set to false if not for sale
                            property.ForSale = false;
                            Console.WriteLine($"Now {notForSale} is NOT for sale.");
                        }
@@ -299,7 +327,9 @@ namespace Assign_1
                        Console.WriteLine("Press any key to continues.");
                        Console.ReadKey();
                        break;
+                   //Buy a for-sale propety, by street address
                    case 7:
+                        //output for UI
                        Console.WriteLine("Enter the street address: ");
                        string purchase = Console.ReadLine();
                        
@@ -313,7 +343,9 @@ namespace Assign_1
                                break;
                            }
                            Console.WriteLine("in continue");
+                           //set false if not for sale
                            property.ForSale = false;
+                            //general output
                            Console.WriteLine($"Congrats! You have successfully purchased {purchase} this property");
                            Console.WriteLine($"Property Address: {property.StreetAddr} / {property.City} / {property.State} / {property.Zip}");
                            string sale = property.ForSale ? "ForSale" : "Not for sale";
@@ -337,6 +369,7 @@ namespace Assign_1
                        Console.WriteLine("Press any key to continues.");
                        Console.ReadKey();
                        break;
+                     //Add yourself as an occupant for a property.
                      case 8:
                         Console.WriteLine("Enter the street address to lookup:");
                         string lookup = Console.ReadLine();
@@ -355,12 +388,14 @@ namespace Assign_1
                                         {
                                             if (e == property.Id)
                                             {
+                                                //output
                                                 Console.WriteLine("You are already a resident at this property.");
                                                 isFound = true;
                                                 break;
                                             }
                                         }
 
+                                        //if not found then its good
                                         if (!isFound)
                                         {
                                             r.Add(property.Id);
@@ -374,7 +409,9 @@ namespace Assign_1
                         Console.WriteLine("Press any key to continues.");
                         Console.ReadKey();
                         break;
+                    //Remove yourself as an occpuant from a propety.
                     case 9:
+                        //output for UI
                         Console.WriteLine("Enter the street address to lookup:");
                         string lookup2 = Console.ReadLine();
                         bool notAddress = true;
@@ -391,6 +428,7 @@ namespace Assign_1
                                     {
                                         foreach (var e in r.Residencelds)
                                         {
+                                            //success option
                                             if (e == property.Id)
                                             {
                                                 Console.WriteLine("Success! You have been removed as a resident from this property.");
@@ -401,6 +439,7 @@ namespace Assign_1
                                             }
                                         }
 
+                                        //if not found the output error
                                         if (!isFound)
                                         {
                                             Console.WriteLine("You do not currently reside at this property.");
@@ -411,7 +450,7 @@ namespace Assign_1
                                 }
                             }
                         }
-
+                        //if address doesnt exist
                         if (notAddress == true)
                         {
                             Console.WriteLine("I'm sorry, I don't recognize this address: " + lookup2);
@@ -419,9 +458,11 @@ namespace Assign_1
                         Console.WriteLine("Press any key to continues.");
                         Console.ReadKey();
                         break;
+                    //quit option
                     case 10:
                         Console.WriteLine("Quitting program...");
                         break;
+                   // Standard error out
                    default:
                        Console.WriteLine("Please select available option!");
                        Console.WriteLine("Press any key to continues.");
@@ -432,8 +473,15 @@ namespace Assign_1
         }
     }
     
+    /*
+    * Class: Person
+    * 
+    * Function: Provide a object instance for pulling in the person data from the text file
+    * 
+    */
     public class Person : IComparable
     {
+        //variables
         private readonly uint _id;
         private readonly DateTime _birthday;
 
@@ -443,6 +491,7 @@ namespace Assign_1
         private List<uint> residencelds = new List<uint>();
         private string fullName;
 
+        //person object for base
         public Person()
         {
             _id = 0;
@@ -454,6 +503,7 @@ namespace Assign_1
             residencelds.Add(0);
         }
 
+        //for creating a person object
         public Person(uint id, DateTime bd, string l, string f, string o, string resId)
         {
             _id = id;
@@ -474,6 +524,7 @@ namespace Assign_1
             }
         }
 
+        //all the following are get/set methods
         public string LastName
         {
             get => lastName;
@@ -494,21 +545,13 @@ namespace Assign_1
 
         public uint[] Residencelds => residencelds.ToArray();
         
+        //add residence id to array
         public void Add(uint id)
         {
             residencelds.Add(id);
         }
 
-        public void Remove(uint id)
-        {
-            residencelds.Remove(id);
-        }
-
-        public void Add(uint id)
-        {
-            residencelds.Add(id);
-        }
-
+        //remove residence id to array
         public void Remove(uint id)
         {
             residencelds.Remove(id);
@@ -520,6 +563,8 @@ namespace Assign_1
 
         public string FullName => fullName;
 
+
+        //compare method for person class
         public int CompareTo(object alpha)
         {
             if (alpha == null)
@@ -534,14 +579,23 @@ namespace Assign_1
             return this.fullName.CompareTo(otherO.fullName);
         }
 
+        //toString method to output the different variables
         public override string ToString()
         {
             return $"ID: {_id} Name: {FullName} Date of birth: {_birthday} Occupation: {Occupation}";
         }
     }
 
+    /*
+    * Class: Propety
+    * 
+    * Function: Allows a user to create a object for the property class based off its variables
+    * 
+    */
+
     public class Property : IComparable
     {
+        //variables for class
         private readonly uint _id;
         private readonly uint _x;
         private readonly uint _y;
@@ -553,6 +607,7 @@ namespace Assign_1
         private string zip;
         private bool forSale;
 
+        //Property Object
         protected Property()
         {
             Console.WriteLine("Property() are using...");
@@ -567,6 +622,7 @@ namespace Assign_1
             forSale = false;
         }
 
+        //creating the Property Object
         public Property(uint id, uint x, uint y, uint o, string sa, string c, string st, string z, bool fs)
         {
             _id = id;
@@ -580,6 +636,8 @@ namespace Assign_1
             forSale = fs;
         }
 
+
+        //All of the GET/SET methods
         public uint OwnerId
         {
             get => ownerID;
@@ -622,6 +680,7 @@ namespace Assign_1
 
         public uint Y => _y;
 
+        //compare for the property
         public int CompareTo(object alpha)
         {
             if (alpha == null)
@@ -658,12 +717,20 @@ namespace Assign_1
         }
     }
 
+    /*
+    * Class: Residential
+    * 
+    * Function: Residential property class which allws us to specify what type of property it is.
+    * 
+    */
     public class Residential : Property
     {
+        //variables
         private uint bedrooms;
         private uint baths;
         private uint sqft;
         
+        //creating the residential object
         protected Residential(uint id, uint x, uint y, uint o,
             string sa, string c, string st, string z, bool fs, uint bedroom, uint bath, uint sq)
             : base(id, x, y, o, sa, c, st, z, fs)
@@ -673,6 +740,8 @@ namespace Assign_1
             Sqft = sq;
         }
 
+
+        //all the GET/SET methods for The class.
         public uint Bedrooms
         {
             get => bedrooms;
@@ -692,13 +761,16 @@ namespace Assign_1
         }
     }
 
+
+    //House class which is based off the Residential class but with a few added variables
     class House : Residential
     {
+        //variables added over the residential
         private bool garage;
         private bool? attatchedGarage;
         private uint flood;
 
-    
+        //creating the residential house object
         public House(uint id, uint x, uint y, uint o, string sa, string c,
             string st, string z, bool fs, uint bedroom, uint bath, uint sq,
             bool gar, bool aGar, uint fl)
@@ -710,6 +782,7 @@ namespace Assign_1
             Flood = fl;
         }
 
+        //These are the GET/Set methods for the Hosue class
         public bool Garage
         {
             get => garage;
@@ -729,10 +802,13 @@ namespace Assign_1
         }
     }
 
+    //Apartment class based off the Residential class
     public class Apartment : Residential
     {
+        //variables
         private string unit;
 
+        //Apartment creating object
         public Apartment(uint id, uint x, uint y, uint o, string sa, string c,
             string st, string z, bool fs, uint bedroom, uint bath, uint sq, string u)
             : base(id, x, y, o, sa, c, st, z, fs, bedroom, bath, sq)
@@ -740,12 +816,21 @@ namespace Assign_1
             Unit = u;
         }
 
+
+        //GET/SET for Apartment
         public string Unit
         {
             get => unit;
             set => unit = value;
         }
     }
+
+    /*
+    * Class: Community
+    * 
+    * Function: This allows a user to create Community objects based off the popultion or Mayor
+    * 
+    */
 
     public class Community : IComparable, IEnumerable
     {
@@ -757,6 +842,7 @@ namespace Assign_1
         private uint mayorID;
         private uint population;
 
+        //Communaity Object
         public Community()
         {
             _id = 0;
@@ -766,6 +852,7 @@ namespace Assign_1
             MayorID = 0;
         }
 
+        //creating the Community Object
         public Community(uint id, string name, uint mId)
         {
             _id = id;
@@ -775,6 +862,8 @@ namespace Assign_1
             MayorID = mId;
         }
         
+
+        //GET/SET methods for community object
         public SortedSet<Property> Props
         {
             get => props;
@@ -787,6 +876,7 @@ namespace Assign_1
             set => residents = value;
         }
 
+        //Compareto method
         public int CompareTo(object alpha)
         {
             if (alpha == null)
@@ -802,6 +892,7 @@ namespace Assign_1
 
         public string Name => _name;
 
+        //GET/SEt for mayor
         public uint MayorID
         {
             get => mayorID;
@@ -816,6 +907,13 @@ namespace Assign_1
         }
     }
 
+    /*
+    * Class: CommEnum
+    * 
+    * Function: Allows you to compare certain objects.
+    * 
+    */
+
     public class CommEnum : IEnumerator
     {
         private Community cList;
@@ -826,6 +924,7 @@ namespace Assign_1
             this.cList = cList;
         }
 
+        //Move to the next object
         public bool MoveNext()
         {
             if (pos != cList.Residents.Count)
@@ -835,6 +934,7 @@ namespace Assign_1
             return pos < cList.Residents.Count;
         }
 
+        //get the current spot in count
         public object Current
         {
             get
@@ -848,6 +948,7 @@ namespace Assign_1
             }
         }
 
+        //reset method to reset the pos
         public void Reset()
         {
             pos = -1;
