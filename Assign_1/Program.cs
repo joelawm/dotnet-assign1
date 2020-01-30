@@ -1,3 +1,12 @@
+/*
+ * Names: Joe Meyer, Huajian Huang
+ * 
+ * Assignment: Assign1
+ * 
+ * Function: The main fucntion of this program is to create a piece of software that allows the managment of properties in DeKalb.
+ * 
+*/
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
